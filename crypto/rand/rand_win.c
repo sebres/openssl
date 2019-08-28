@@ -26,11 +26,16 @@
 
 # ifdef USE_BCRYPTGENRANDOM
 #  include <bcrypt.h>
-#  pragma comment(lib, "bcrypt.lib")
-#  ifndef STATUS_SUCCESS
-#   define STATUS_SUCCESS ((NTSTATUS)0x00000000L)
+#  ifdef BCRYPT_USE_SYSTEM_PREFERRED_RNG
+#    pragma comment(lib, "bcrypt.lib")
+#    ifndef STATUS_SUCCESS
+#     define STATUS_SUCCESS ((NTSTATUS)0x00000000L)
+#    endif
+#  else
+#    undef USE_BCRYPTGENRANDOM
 #  endif
-# else
+# endif
+# ifndef USE_BCRYPTGENRANDOM
 #  include <wincrypt.h>
 /*
  * Intel hardware RNG CSP -- available from
